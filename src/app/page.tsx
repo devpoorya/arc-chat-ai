@@ -1,37 +1,122 @@
-import Link from "next/link";
+"use client";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import ChatLayout from "./_components/chat-layout";
+import { ChevronDownIcon, SendHorizonalIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { sendPromptAction } from "@/server/actions/prompt-actions";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomePage() {
+export default function ChatPage() {
+  const [prompt, setPrompt] = useState("");
+  const [textboxHeight, setTextboxHeight] = useState<number | "auto">(24);
+  const [messages, setMessages] = useState<
+    { role: "user" | "assistant"; content: string; type: "error" | "normal" }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const submitPrompt = () => {
+    if (prompt.length < 1) return;
+    if (prompt.split("\n").every((l) => l.length < 1)) return;
+    setLoading(true);
+    sendPromptAction({ prompt })
+      .then((res) => {
+        setLoading(false);
+        setPrompt("");
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            type: "normal",
+            content: res + "",
+          },
+        ]);
+      })
+      .catch(() => {
+        setLoading(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            type: "error",
+            content: "متاسفم، در پردازش درخواست شما خطایی رخ داد!",
+          },
+        ]);
+      });
+  };
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
+    <ChatLayout>
+      <div className="flex h-screen flex-col px-6 pt-8">
+        <div className="mx-auto flex w-full max-w-2xl flex-grow flex-col gap-4">
+          {messages.map((m, i) => (
+            <div
+              key={i}
+              className={cn(
+                "flex w-full items-center gap-2 rounded-md border bg-neutral-600 p-4 text-neutral-300",
+                m.type === "error" && "bg-red-600 font-semibold text-white",
+              )}
+            >
+              <div className="flex-grow">
+                {m.content.split("\n").map((l, i) => (
+                  <div key={i} className="rtl text-sm leading-relaxed">
+                    {l}
+                  </div>
+                ))}
+              </div>
             </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
+          ))}
+          {loading && (
+            <div className="w-full">
+              <Skeleton className="ms-auto h-8 w-full max-w-sm" />
+              <Skeleton className="mt-4 h-24 w-full" />
             </div>
-          </Link>
+          )}
+        </div>
+        <div className="relative mx-auto flex w-full max-w-2xl flex-col items-end rounded-t-lg bg-neutral-600 px-6 py-4 text-white">
+          <textarea
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                if (!e.shiftKey) {
+                  e.preventDefault();
+                  submitPrompt();
+                  return false;
+                }
+              }
+            }}
+            onChange={(e) => {
+              if (e.target.value.length < prompt.length)
+                setTextboxHeight("auto");
+              setPrompt(e.target.value);
+              setTimeout(() => {
+                setTextboxHeight(e.target.scrollHeight);
+              }, 0);
+            }}
+            value={prompt}
+            style={{ height: textboxHeight }}
+            placeholder="...پیام خود را اینجا بنویسید"
+            className="rtl mb-4 w-full resize-none text-right text-base outline-none"
+          />
+          <Popover>
+            <PopoverTrigger className="flex w-max cursor-pointer items-center gap-1 text-neutral-300 transition-colors hover:text-white">
+              <ChevronDownIcon className="h-4 w-4" />
+              <div className="text-sm font-semibold">دیپ سیک ۳</div>
+            </PopoverTrigger>
+            <PopoverContent>{textboxHeight}</PopoverContent>
+          </Popover>
+          <Button
+            disabled={prompt.length < 1 || loading}
+            onClick={() => submitPrompt()}
+            className="absolute bottom-4 left-4 mt-4 rounded-full"
+            size={"icon"}
+          >
+            <SendHorizonalIcon className="-scale-x-100 transform" />
+          </Button>
         </div>
       </div>
-    </main>
+    </ChatLayout>
   );
 }

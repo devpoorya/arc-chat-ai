@@ -1,15 +1,8 @@
 @import "tailwindcss";
+@import "./fonts.css";
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
-@theme {
-  --color-*: initial;
-  --color-white: #fff;
-  --color-purple: #3f3cbb;
-  --color-midnight: #121063;
-  --color-tahiti: #3ab7bf;
-  --color-bermuda: #78dcca;
-}
 
 :root {
   --background: oklch(1 0 0);
@@ -148,4 +141,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+* {
+  font-family: IRANSansX;
+}
+
+.rtl {
+  direction: rtl;
 }
