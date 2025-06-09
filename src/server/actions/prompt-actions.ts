@@ -1,14 +1,30 @@
 "use server";
 import { OpenAI } from "openai";
-export async function sendPromptAction({ prompt, modelId }: { prompt: string, modelId: string }) {
+
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+  type: "error" | "normal";
+};
+
+export async function sendPromptAction({ prompt, modelId, existingMessages }: { prompt: string; modelId: string; existingMessages: Message[]; }) {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: "https://openrouter.ai/api/v1",
   });
 
+  const formattedMessages = existingMessages
+    .filter(msg => msg.type !== "error")
+    .map(msg => ({
+      role: msg.role,
+      content: msg.content
+    })); // removing the type field
+  
+  formattedMessages.push({ role: "user", content: prompt });
+
   const completion = await openai.chat.completions.create({
     model: modelId,
-    messages: [{ role: "user", content: prompt }],
+    messages: formattedMessages,
     temperature: 0.7,
   });
 

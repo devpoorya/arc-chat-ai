@@ -32,18 +32,35 @@ export default function ChatPage() {
     { role: "user" | "assistant"; content: string; type: "error" | "normal" }[]
   >([]);
   const [loading, setLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState(ALL_MODELS[8]!);
+  const [selectedModel, setSelectedModel] = useState(ALL_MODELS[0]!);
 
   
 
   const submitPrompt = () => {
     if (prompt.length < 1) return;
     if (prompt.split("\n").every((l) => l.length < 1)) return;
+    
+    // Add user message to the messages list
+    const userMessage = {
+      role: "user" as const,
+      content: prompt,
+      type: "normal" as const,
+    };
+    
+    const existingMessages = messages;
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setLoading(true);
-    sendPromptAction({ prompt: prompt, modelId: selectedModel.id })
+    
+    sendPromptAction({ 
+      prompt: prompt, 
+      modelId: selectedModel.id,
+      existingMessages: existingMessages // not including the current
+    })
       .then((res) => {
         setLoading(false);
         setPrompt("");
+        setTextboxHeight(24);
         setMessages((prev) => [
           ...prev,
           {
