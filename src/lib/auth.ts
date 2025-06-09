@@ -7,7 +7,7 @@ import { admin } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "sqlite",
+    provider: "pg", // or "mysql", "sqlite"
     usePlural: true,
   }),
   baseURL: env.NEXT_PUBLIC_APP_URL,
@@ -19,8 +19,12 @@ export const auth = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
-  emailAndPassword: {
-    enabled: true,
+  socialProviders: {
+    google: {
+      prompt: "select_account",
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
   },
   plugins: [
     admin({

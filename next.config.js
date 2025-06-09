@@ -12,6 +12,13 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "*.googleusercontent.com",
+      },
+    ],
+  },
 };
 
 export default config;

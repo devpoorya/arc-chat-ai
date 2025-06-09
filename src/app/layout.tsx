@@ -9,7 +9,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Arc AI",
+  title: "Arc Chat",
   description: "Faster More Affordable Chat",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
