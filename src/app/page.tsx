@@ -13,17 +13,34 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ChatPage() {
+  const ALL_MODELS = [
+    { id: "openai/gpt-4o", name: "GPT-4o" },
+    { id: "openai/gpt-4.1", name: "GPT-4.1" },
+    { id: "openai/gpt-4.5-preview", name: "GPT-4.5" },
+    { id: "openai/o4-mini-high", name: "o4-mini-high" },
+    { id: "meta-llama/llama-4-scout", name: "Llama 4 Scout" },
+    { id: "deepseek/deepseek-chat-v3-0324", name: "DeepSeek v3" },
+    { id: "deepseek/deepseek-r1-0528", name: "DeepSeek R1" },
+    { id: "google/gemini-2.0-flash-001", name: "Gemini 2.0 Flash" },
+    { id: "google/gemini-2.5-pro-preview-05-06", name: "Gemini 2.5 Pro Preview 05-06" },
+    { id: "qwen/qwen3-235b-a22b", name: "Qwen3 235B A22B" },
+  ];
+
   const [prompt, setPrompt] = useState("");
   const [textboxHeight, setTextboxHeight] = useState<number | "auto">(24);
   const [messages, setMessages] = useState<
     { role: "user" | "assistant"; content: string; type: "error" | "normal" }[]
   >([]);
   const [loading, setLoading] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(ALL_MODELS[8]!);
+
+  
+
   const submitPrompt = () => {
     if (prompt.length < 1) return;
     if (prompt.split("\n").every((l) => l.length < 1)) return;
     setLoading(true);
-    sendPromptAction({ prompt })
+    sendPromptAction({ prompt: prompt, modelId: selectedModel.id })
       .then((res) => {
         setLoading(false);
         setPrompt("");
@@ -103,9 +120,28 @@ export default function ChatPage() {
           <Popover>
             <PopoverTrigger className="flex w-max cursor-pointer items-center gap-1 text-neutral-300 transition-colors hover:text-white">
               <ChevronDownIcon className="h-4 w-4" />
-              <div className="text-sm font-semibold">دیپ سیک ۳</div>
+              <div className="text-sm font-semibold">{selectedModel.name}</div>
             </PopoverTrigger>
-            <PopoverContent>{textboxHeight}</PopoverContent>
+            <PopoverContent className="w-48 p-2">
+              <div className="flex flex-col gap-1">
+                {ALL_MODELS.map((model) => (
+                  <div
+                    key={model.id}
+                    onClick={() => {
+                      setSelectedModel(model);
+                    }}
+                    className={cn(
+                      "cursor-pointer rounded-md p-2 text-sm transition-colors rtl text-right",
+                      selectedModel.id === model.id
+                        ? "bg-neutral-700 text-white"
+                        : "text-black-300 hover:bg-neutral-700 hover:text-white",
+                    )}
+                  >
+                    {model.name}
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
           </Popover>
           <Button
             disabled={prompt.length < 1 || loading}

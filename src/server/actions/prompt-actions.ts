@@ -1,15 +1,14 @@
 "use server";
 import { OpenAI } from "openai";
-export async function sendPromptAction({ prompt }: { prompt: string }) {
+export async function sendPromptAction({ prompt, modelId }: { prompt: string, modelId: string }) {
   const openai = new OpenAI({
-    apiKey: "fw_3Zmy8hwd3hQHCbufFXJHVKjs",
-    baseURL: "https://api.fireworks.ai/inference/v1",
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: "https://openrouter.ai/api/v1",
   });
 
   const completion = await openai.chat.completions.create({
-    model: "accounts/fireworks/models/deepseek-v3",
+    model: modelId,
     messages: [{ role: "user", content: prompt }],
-    max_tokens: 1000,
     temperature: 0.7,
   });
 
