@@ -39,16 +39,14 @@ export default function ChatPage() {
   const submitPrompt = () => {
     if (prompt.length < 1) return;
     if (prompt.split("\n").every((l) => l.length < 1)) return;
+    if (loading) return;
     
-    // Add user message to the messages list
-    const userMessage = {
+    const existingMessages = messages;
+    const updatedMessages = [...messages, {
       role: "user" as const,
       content: prompt,
       type: "normal" as const,
-    };
-    
-    const existingMessages = messages;
-    const updatedMessages = [...messages, userMessage];
+    }];
     setMessages(updatedMessages);
     setLoading(true);
     
@@ -96,7 +94,7 @@ export default function ChatPage() {
             >
               <div className="flex-grow">
                 {m.content.split("\n").map((l, i) => (
-                  <div key={i} className="rtl text-sm leading-relaxed">
+                  <div key={i} className="text-sm leading-relaxed">
                     {l}
                   </div>
                 ))}
@@ -110,64 +108,70 @@ export default function ChatPage() {
             </div>
           )}
         </div>
-        <div className="relative mx-auto flex w-full max-w-2xl flex-col items-end rounded-t-lg bg-neutral-600 px-6 py-4 text-white">
-          <textarea
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                if (!e.shiftKey) {
-                  e.preventDefault();
-                  submitPrompt();
-                  return false;
-                }
-              }
-            }}
-            onChange={(e) => {
-              if (e.target.value.length < prompt.length)
-                setTextboxHeight("auto");
-              setPrompt(e.target.value);
-              setTimeout(() => {
-                setTextboxHeight(e.target.scrollHeight);
-              }, 0);
-            }}
-            value={prompt}
-            style={{ height: textboxHeight }}
-            placeholder="...پیام خود را اینجا بنویسید"
-            className="rtl mb-4 w-full resize-none text-right text-base outline-none"
-          />
-          <Popover>
-            <PopoverTrigger className="flex w-max cursor-pointer items-center gap-1 text-neutral-300 transition-colors hover:text-white">
-              <ChevronDownIcon className="h-4 w-4" />
-              <div className="text-sm font-semibold">{selectedModel.name}</div>
-            </PopoverTrigger>
-            <PopoverContent className="w-48 p-2">
-              <div className="flex flex-col gap-1">
-                {ALL_MODELS.map((model) => (
-                  <div
-                    key={model.id}
-                    onClick={() => {
-                      setSelectedModel(model);
-                    }}
-                    className={cn(
-                      "cursor-pointer rounded-md p-2 text-sm transition-colors rtl text-right",
-                      selectedModel.id === model.id
-                        ? "bg-neutral-700 text-white"
-                        : "text-black-300 hover:bg-neutral-700 hover:text-white",
-                    )}
-                  >
-                    {model.name}
+        <div className="relative mx-auto flex w-full max-w-2xl rounded-t-lg bg-neutral-600 px-6 py-4 text-white">
+          <div className="flex w-full items-center">
+            <div className="flex-shrink-0 mr-4">
+              <Popover>
+                <PopoverTrigger className="flex w-max cursor-pointer items-center gap-1 text-neutral-300 transition-colors hover:text-white">
+                  <div className="text-sm font-semibold">{selectedModel.name}</div>
+                  <ChevronDownIcon className="h-4 w-4" />
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2">
+                  <div className="flex flex-col gap-1">
+                    {ALL_MODELS.map((model) => (
+                      <div
+                        key={model.id}
+                        onClick={() => {
+                          setSelectedModel(model);
+                        }}
+                        className={cn(
+                          "cursor-pointer rounded-md p-2 text-sm transition-colors text-left",
+                          selectedModel.id === model.id
+                            ? "bg-neutral-700 text-white"
+                            : "text-black-300 hover:bg-neutral-700 hover:text-white",
+                        )}
+                      >
+                        {model.name}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-          <Button
-            disabled={prompt.length < 1 || loading}
-            onClick={() => submitPrompt()}
-            className="absolute bottom-4 left-4 mt-4 rounded-full"
-            size={"icon"}
-          >
-            <SendHorizonalIcon className="-scale-x-100 transform" />
-          </Button>
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="relative flex-grow">
+              <textarea
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    if (!e.shiftKey) {
+                      e.preventDefault();
+                      submitPrompt();
+                      return false;
+                    }
+                  }
+                }}
+                onChange={(e) => {
+                  if (e.target.value.length < prompt.length)
+                    setTextboxHeight("auto");
+                  setPrompt(e.target.value);
+                  setTimeout(() => {
+                    setTextboxHeight(e.target.scrollHeight);
+                  }, 0);
+                }}
+                value={prompt}
+                style={{ height: textboxHeight }}
+                placeholder="Write your message here..."
+                className="w-full resize-none text-left text-base outline-none"
+              />
+              <Button
+                disabled={prompt.length < 1 || loading}
+                onClick={() => submitPrompt()}
+                className="absolute bottom-0 right-0 rounded-full"
+                size={"icon"}
+              >
+                <SendHorizonalIcon />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </ChatLayout>
