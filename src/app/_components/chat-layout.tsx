@@ -12,9 +12,9 @@ export default async function ChatLayout({
 }) {
   const { user } = await validateRequest();
   return (
-    <div className="dark flex h-screen overflow-hidden bg-neutral-800">
-      <nav className="flex w-64 shrink-0 flex-col items-start border-r border-r-neutral-600 px-6 py-8">
-        <h1 className="text-2xl font-black text-white">Arc Chat</h1>
+    <div className="dark bg-background flex h-screen overflow-hidden">
+      <nav className="m-4 flex w-72 shrink-0 flex-col items-start rounded-xl border border-neutral-600 bg-[#161B29] px-4 pt-6 pb-4">
+        <h1 className="text-foreground text-xl font-bold">Arc Chat</h1>
         {user ? (
           <div className="mt-auto flex items-center gap-4">
             <div className="relative h-9 w-9 overflow-hidden rounded-full">
@@ -28,7 +28,7 @@ export default async function ChatLayout({
             </div>
           </div>
         ) : (
-          <Button asChild className="mt-auto w-full">
+          <Button asChild className="mt-auto w-full" variant={"default"}>
             <Link href={"/auth/login"}>
               <LogInIcon />
               Login

@@ -34,7 +34,7 @@ export default function SignIn() {
             )}
           >
             <Button
-              variant="outline"
+              variant={"default"}
               className={cn("w-full gap-2")}
               disabled={loading}
               onClick={async () => {
