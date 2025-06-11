@@ -13,8 +13,13 @@ import { ChevronDownIcon, SendHorizonalIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ChatBox() {
-  const { currentMessages, setCurrentMessages, loading, setLoading } =
-    useMainStore();
+  const {
+    currentMessages,
+    setCurrentMessages,
+    loading,
+    setLoading,
+    currentThreadId,
+  } = useMainStore();
   const [prompt, setPrompt] = useState("");
   const [textboxHeight, setTextboxHeight] = useState<number | "auto">(24);
   const [selectedModel, setSelectedModel] = useState(SUPPORTED_MODELS[0]!);
@@ -40,6 +45,7 @@ export default function ChatBox() {
       prompt: prompt,
       modelId: selectedModel.id,
       existingMessages: existingMessages, // not including the current
+      threadId: currentThreadId,
     })
       .then((res) => {
         setLoading(false);
@@ -48,7 +54,7 @@ export default function ChatBox() {
         setCurrentMessages([
           ...currentMessages,
           {
-            role: "assistant",
+            role: "system",
             type: "normal",
             content: res + "",
           },
@@ -59,7 +65,7 @@ export default function ChatBox() {
         setCurrentMessages([
           ...currentMessages,
           {
-            role: "assistant",
+            role: "system",
             type: "error",
             content: "متاسفم، در پردازش درخواست شما خطایی رخ داد!",
           },
@@ -68,7 +74,7 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="relative mx-auto flex w-full max-w-2xl rounded-t-lg bg-neutral-600 px-6 py-4 text-white">
+    <div className="glass absolute bottom-[2vh] left-1/2 h-[100px] w-full max-w-xl -translate-x-1/2 p-4">
       <div className="flex w-full items-center">
         <div className="mr-4 flex-shrink-0">
           <Popover>

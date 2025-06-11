@@ -145,3 +145,22 @@
 .rtl {
   direction: rtl;
 }
+
+.glass {
+  background: rgba(255, 255, 255, 0.21);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5.9px);
+  -webkit-backdrop-filter: blur(5.9px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.background-gradient {
+  background: #b0b5e8;
+  background: radial-gradient(
+    circle,
+    rgba(176, 181, 232, 1) 0%,
+    rgba(208, 211, 241, 1) 50%,
+    rgba(177, 182, 231, 1) 100%
+  );
+}

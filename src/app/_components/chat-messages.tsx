@@ -2,16 +2,22 @@
 import { cn } from "@/lib/utils";
 import { useMainStore } from "../store/mainStore";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "motion/react";
 
 export default function ChatMessages() {
-  const { currentMessages, loading } = useMainStore();
+  const { currentMessages, loading, sidebarExpanded } = useMainStore();
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-grow flex-col gap-4">
+    <motion.div
+      animate={{
+        width: sidebarExpanded ? "calc(100% - 336px)" : "calc(100% - 32px)",
+      }}
+      className="mt-4 mr-4 ml-auto flex h-[calc(100vh-148px)] w-full flex-grow flex-col gap-4 overflow-y-scroll"
+    >
       {currentMessages.map((m, i) => (
         <div
           key={i}
           className={cn(
-            "flex w-full items-center gap-2 rounded-md border bg-neutral-600 p-4 text-neutral-300",
+            "glass flex w-full items-center gap-2 rounded-md border p-4 text-white",
             m.type === "error" && "bg-red-600 font-semibold text-white",
           )}
         >
@@ -30,6 +36,6 @@ export default function ChatMessages() {
           <Skeleton className="mt-4 h-24 w-full" />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
