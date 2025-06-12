@@ -17,11 +17,13 @@ export async function sendPromptAction({
   modelId,
   existingMessages,
   threadId,
+  responseType,
 }: {
   prompt: string;
   modelId: string;
   existingMessages: Message[];
   threadId: number | null;
+  responseType: "normal" | "creative" | "factual";
 }) {
   const { session } = await validateRequest();
   if (!session) throw new Error("Unauthorized");
@@ -39,10 +41,17 @@ export async function sendPromptAction({
 
   formattedMessages.push({ role: "user", content: prompt });
 
+  // Adjust temperature based on response type
+  const temperature = {
+    normal: 0.5,
+    creative: 1,
+    factual: 0,
+  }[responseType];
+
   const completion = await openai.chat.completions.create({
     model: modelId,
     messages: formattedMessages,
-    temperature: 0.7,
+    temperature,
   });
 
   const response = completion?.choices[0]?.message?.content;
