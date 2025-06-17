@@ -1,14 +1,17 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LogInIcon } from "lucide-react";
+import { LogInIcon, LogOutIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion, useSpring } from "motion/react";
 import { useMainStore } from "../store/mainStore";
 import { type threads } from "@/db/schema/content.sql";
 import { getThreadMessagesAction } from "@/server/actions/prompt-actions";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function ChatSidebar({
   user,
@@ -23,14 +26,21 @@ export default function ChatSidebar({
     setCurrentThreadId,
     setCurrentMessages,
     setLoading,
+    setThreadsList,
+    currentThreadId,
+    threadsList: threadsInStore,
   } = useMainStore();
   const height = useSpring("96vh", {
     bounce: 0,
   });
+  const router = useRouter();
   const windowHeight = useMemo(
     () => (typeof window !== "undefined" ? window.innerHeight - 32 : 100),
     [],
   );
+  useEffect(() => {
+    if (threadsList) setThreadsList(threadsList);
+  }, [threadsList, setThreadsList]);
   return (
     <motion.div
       animate={{ height: sidebarExpanded ? windowHeight + "px" : "100px" }}
@@ -63,12 +73,23 @@ export default function ChatSidebar({
           <motion.div
             key="modal"
             exit={{ opacity: 0 }}
-            className="flex-grow pb-4"
+            className="flex flex-grow flex-col gap-2 overflow-y-scroll pb-4"
           >
-            {threadsList?.map((t) => (
+            <button
+              className="hover:bg-primary mx-2 mt-2 mb-2 flex cursor-pointer items-center justify-center gap-1 rounded-lg px-4 py-2 text-sm font-medium transition-all"
+              onClick={() => {
+                setCurrentThreadId(null);
+                setCurrentMessages([]);
+              }}
+            >
+              <PlusIcon className="size-4" />
+              New Chat
+            </button>
+            {threadsInStore?.map((t) => (
               <div
                 key={t.id}
                 onClick={() => {
+                  setCurrentMessages([]);
                   setCurrentThreadId(t.id);
                   setLoading(true);
                   getThreadMessagesAction({ threadId: t.id })
@@ -89,12 +110,15 @@ export default function ChatSidebar({
                           role: "system",
                           type: "error",
                           content:
-                            "متاسفم، در پردازش درخواست شما خطایی رخ داد!",
+                            "An error occured while processing your request please try again!",
                         },
                       ]);
                     });
                 }}
-                className="glass mx-2 flex cursor-pointer items-center gap-4 px-4 py-2 text-sm font-semibold"
+                className={cn(
+                  currentThreadId === t.id && "bg-primary/10!",
+                  "glass mx-2 flex cursor-pointer items-center gap-4 rounded-lg! px-4 py-2 text-sm font-semibold",
+                )}
               >
                 {t.title}
               </div>
@@ -111,9 +135,26 @@ export default function ChatSidebar({
             <div className="text-sm font-semibold text-white">{user.name}</div>
             <div className="text-xs font-light text-white">{user.email}</div>
           </div>
+          <div
+            className="ml-auto cursor-pointer"
+            onClick={() => {
+              authClient
+                .signOut({})
+                .then(() => {
+                  setCurrentMessages([]);
+                  setCurrentThreadId(null);
+                  router.refresh();
+                })
+                .catch(() => {
+                  toast("Failed to log you out");
+                });
+            }}
+          >
+            <LogOutIcon className="size-4" />
+          </div>
         </div>
       ) : (
-        <Button asChild className="mx-4 w-full" variant={"default"}>
+        <Button asChild className="mx-auto w-64" variant={"default"}>
           <Link href={"/auth/login"}>
             <LogInIcon />
             Login

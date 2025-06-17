@@ -1,12 +1,14 @@
 import ChatLayout from "./_components/chat-layout";
 import ChatBox from "./_components/chat-box";
 import ChatMessages from "./_components/chat-messages";
+import { validateRequest } from "@/lib/server-utils";
 
-export default function ChatPage() {
+export default async function ChatPage() {
+  const { session } = await validateRequest();
   return (
     <ChatLayout>
-      <ChatMessages />
-      <ChatBox />
+      <ChatMessages isLoggedIn={!!session} />
+      {!!session && <ChatBox />}
     </ChatLayout>
   );
 }

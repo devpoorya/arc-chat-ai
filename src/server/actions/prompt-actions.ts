@@ -57,6 +57,7 @@ export async function sendPromptAction({
   const response = completion?.choices[0]?.message?.content;
 
   let decidedThreadId: number | null = threadId;
+  let newThread: typeof threads.$inferSelect | null = null;
   if (!decidedThreadId) {
     const threadTitleCompletion = await openai.chat.completions.create({
       model: "google/gemini-2.0-flash-001",
@@ -77,11 +78,18 @@ export async function sendPromptAction({
         threadOwnerId: session.userId,
       })
       .returning();
+    newThread = threadInsert ?? null;
     decidedThreadId = threadInsert?.id ?? null;
   }
 
   if (!decidedThreadId) throw new Error("Failed to create thread");
 
+  await db
+    .update(threads)
+    .set({
+      updatedAt: new Date(),
+    })
+    .where(eq(threads.id, decidedThreadId));
   await db.insert(messages).values({
     senderRole: "user",
     threadId: decidedThreadId,
@@ -95,7 +103,7 @@ export async function sendPromptAction({
     imageContent: null, // Null for now until we add image support
   });
 
-  return response;
+  return { response, newThread };
 }
 
 export async function getThreadMessagesAction({

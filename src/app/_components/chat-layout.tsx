@@ -14,6 +14,7 @@ export default async function ChatLayout({
   const threadsList = user?.id
     ? await db.query.threads.findMany({
         where: eq(threads.threadOwnerId, user.id),
+        orderBy: (schema, { desc }) => desc(schema.updatedAt),
       })
     : [];
   return (

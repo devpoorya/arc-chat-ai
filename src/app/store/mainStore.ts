@@ -1,3 +1,4 @@
+import { type threads } from "@/db/schema/content.sql";
 import { create } from "zustand";
 
 export type Message = {
@@ -6,6 +7,8 @@ export type Message = {
   type: "error" | "normal";
 };
 type MainStore = {
+  threadsList: (typeof threads.$inferSelect)[];
+  setThreadsList: (threadsList: (typeof threads.$inferSelect)[]) => void;
   currentThreadId: number | null;
   setCurrentThreadId: (currentThreadId: number | null) => void;
   currentMessages: Message[];
@@ -17,6 +20,9 @@ type MainStore = {
 };
 
 export const useMainStore = create<MainStore>()((set) => ({
+  threadsList: [],
+  setThreadsList: (threadsList: (typeof threads.$inferSelect)[]) =>
+    set({ threadsList }),
   currentThreadId: null,
   setCurrentThreadId: (currentThreadId: number | null) =>
     set({ currentThreadId }),
@@ -24,6 +30,6 @@ export const useMainStore = create<MainStore>()((set) => ({
   setCurrentMessages: (currentMessages: Message[]) => set({ currentMessages }),
   loading: false,
   setLoading: (loading: boolean) => set({ loading }),
-  sidebarExpanded: false,
+  sidebarExpanded: true,
   setSidebarExpanded: (sidebarExpanded: boolean) => set({ sidebarExpanded }),
 }));
