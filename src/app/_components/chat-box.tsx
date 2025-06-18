@@ -28,6 +28,7 @@ export default function ChatBox() {
     setThreadsList,
     threadsList,
     setCurrentThreadId,
+    openRouterApiKey,
   } = useMainStore();
   const [prompt, setPrompt] = useState("");
   const [textboxHeight, setTextboxHeight] = useState<number | "auto">(24);
@@ -84,6 +85,7 @@ export default function ChatBox() {
       threadId: currentThreadId,
       responseType: responseType,
       files: selectedFiles,
+      openRouterApiKey,
     })
       .then(({ response, newThread }) => {
         if (newThread) {
@@ -117,7 +119,7 @@ export default function ChatBox() {
             role: "system",
             type: "error",
             content:
-              "An error occured while processing your request please try again!",
+              "An error occured while processing your request please try again! Maybe you need to set an updated OpenRouter API key in the settings (button in the top of the screen).",
           },
         ]);
       });
@@ -147,11 +149,13 @@ export default function ChatBox() {
           <div className="flex w-full items-center">
             <div className="mr-4 flex-shrink-0">
               <Popover>
-                <PopoverTrigger className="flex w-max cursor-pointer items-center gap-1 text-neutral-300 transition-colors hover:text-white">
-                  <div className="text-sm font-semibold text-white">
-                    {selectedModel.name}
-                  </div>
-                  <ChevronDownIcon className="h-4 w-4" />
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[200px] justify-between">
+                    <div className="text-sm font-semibold text-white">
+                      {selectedModel.name}
+                    </div>
+                    <ChevronDownIcon className="h-4 w-4" />
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent className="glass bg-primary/10! w-48 p-2 backdrop-brightness-50">
                   <div className="flex flex-col gap-1">
@@ -222,25 +226,23 @@ export default function ChatBox() {
                   type="file"
                   ref={fileInputRef}
                   onChange={handleFileSelect}
-                  accept="image/*,.pdf"
-                  multiple
                   className="hidden"
+                  accept="image/*,application/pdf"
                 />
                 <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="rounded-full"
-                  size="icon"
                   variant="ghost"
+                  size="icon"
+                  onClick={() => fileInputRef.current?.click()}
                 >
-                  <PaperclipIcon className="h-4 w-4" />
+                  <PaperclipIcon className="h-4 w-4" style={{ color: "black" }} />
                 </Button>
                 <Button
-                  disabled={(prompt.length < 1 && selectedFiles.length === 0) || loading}
-                  onClick={() => submitPrompt()}
-                  className="rounded-full"
+                  variant="ghost"
                   size="icon"
+                  onClick={submitPrompt}
+                  disabled={loading}
                 >
-                  <SendHorizonalIcon />
+                  <SendHorizonalIcon className="h-4 w-4" style={{ color: "black" }} />
                 </Button>
               </div>
             </div>

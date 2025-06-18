@@ -5,12 +5,8 @@ import { env } from "@/env";
 import { validateRequest } from "@/lib/server-utils";
 import { asc, eq } from "drizzle-orm";
 import { OpenAI } from "openai";
-
-type Message = {
-  role: "user" | "system";
-  content: string;
-  type: "error" | "normal";
-};
+import { nanoid } from "nanoid";
+import { type Message } from "@/app/store/mainStore";
 
 export async function sendPromptAction({
   prompt,
@@ -19,6 +15,7 @@ export async function sendPromptAction({
   threadId,
   responseType,
   files,
+  openRouterApiKey,
 }: {
   prompt: string;
   modelId: string;
@@ -26,11 +23,17 @@ export async function sendPromptAction({
   threadId: number | null;
   responseType: "normal" | "creative" | "factual";
   files?: File[];
+  openRouterApiKey: string | null;
 }) {
   const { session } = await validateRequest();
   if (!session) throw new Error("Unauthorized");
+  
+  if (!openRouterApiKey) {
+    throw new Error("OpenRouter API key is required. Please set it in the settings.");
+  }
+
   const openai = new OpenAI({
-    apiKey: env.OPENROUTER_API_KEY,
+    apiKey: openRouterApiKey,
     baseURL: "https://openrouter.ai/api/v1",
   });
 
@@ -87,57 +90,55 @@ export async function sendPromptAction({
     temperature,
   });
 
-  const response = completion?.choices[0]?.message?.content;
+  const response = completion.choices[0]?.message?.content;
 
-  let decidedThreadId: number | null = threadId;
-  let newThread: typeof threads.$inferSelect | null = null;
-  if (!decidedThreadId) {
-    const threadTitleCompletion = await openai.chat.completions.create({
-      model: "google/gemini-2.0-flash-001",
-      temperature: 0.2,
-      messages: [
-        {
-          role: "user",
-          content: `Generate a title for the following message and output only the title without any other text: "${prompt}"`,
-        },
-      ],
-    });
-    const [threadInsert] = await db
-      .insert(threads)
-      .values({
-        title:
-          threadTitleCompletion.choices.at(0)?.message.content ??
-          "Untitled Chat",
-        threadOwnerId: session.userId,
-      })
-      .returning();
-    newThread = threadInsert ?? null;
-    decidedThreadId = threadInsert?.id ?? null;
+  if (!response) {
+    throw new Error("No response from the model");
   }
 
-  if (!decidedThreadId) throw new Error("Failed to create thread");
+  // Create or update thread
+  let currentThreadId = threadId;
+  if (!currentThreadId) {
+    const [newThread] = await db
+      .insert(threads)
+      .values({
+        threadOwnerId: session.userId,
+        title: prompt.slice(0, 50) + (prompt.length > 50 ? "..." : ""),
+      })
+      .returning();
+    
+    if (!newThread) {
+      throw new Error("Failed to create new thread");
+    }
+    
+    currentThreadId = newThread.id;
+  }
 
-  await db
-    .update(threads)
-    .set({
-      updatedAt: new Date(),
-    })
-    .where(eq(threads.id, decidedThreadId));
+  // Save messages
+  await db.insert(messages).values([
+    {
+      threadId: currentThreadId,
+      textContent: prompt,
+      senderRole: "user",
+    },
+    {
+      threadId: currentThreadId,
+      textContent: response,
+      senderRole: "system",
+    },
+  ]);
 
-  await db.insert(messages).values({
-    senderRole: "user",
-    threadId: decidedThreadId,
-    textContent: prompt,
-    imageContent,
-  });
-  await db.insert(messages).values({
-    senderRole: "system",
-    threadId: decidedThreadId,
-    textContent: response,
-    imageContent: null,
-  });
-
-  return { response, newThread };
+  return {
+    response,
+    newThread: !threadId ? {
+      id: currentThreadId,
+      title: prompt.slice(0, 50) + (prompt.length > 50 ? "..." : ""),
+      threadOwnerId: session.userId,
+      shareId: null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } : null,
+  };
 }
 
 export async function getThreadMessagesAction({
@@ -148,11 +149,20 @@ export async function getThreadMessagesAction({
   const { session } = await validateRequest();
   if (!session) throw new Error("Unauthorized");
 
-  const messageList = await db.query.messages.findMany({
-    where: eq(messages.threadId, threadId),
-    orderBy: asc(messages.createdAt),
+  const thread = await db.query.threads.findFirst({
+    where: eq(threads.id, threadId),
   });
-  return messageList;
+
+  if (!thread || thread.threadOwnerId !== session.userId) {
+    throw new Error("Thread not found");
+  }
+
+  const threadMessages = await db.query.messages.findMany({
+    where: eq(messages.threadId, threadId),
+    orderBy: (messages, { asc }) => [asc(messages.createdAt)],
+  });
+
+  return threadMessages;
 }
 
 export async function forkThreadAction({
@@ -165,37 +175,39 @@ export async function forkThreadAction({
   const { session } = await validateRequest();
   if (!session) throw new Error("Unauthorized");
 
-  // Get all messages up to the specified index
-  const threadMessages = await db.query.messages.findMany({
-    where: eq(messages.threadId, threadId),
-    orderBy: asc(messages.createdAt),
-    limit: messageIndex + 1,
-  });
-
-  if (!threadMessages.length) throw new Error("No messages found");
-
-  // Create new thread with the same title but with "(Forked)" suffix
-  const originalThread = await db.query.threads.findFirst({
+  const thread = await db.query.threads.findFirst({
     where: eq(threads.id, threadId),
   });
 
+  if (!thread || thread.threadOwnerId !== session.userId) {
+    throw new Error("Thread not found");
+  }
+
+  const threadMessages = await db.query.messages.findMany({
+    where: eq(messages.threadId, threadId),
+    orderBy: (messages, { asc }) => [asc(messages.createdAt)],
+  });
+
+  // Create new thread
   const [newThread] = await db
     .insert(threads)
     .values({
-      title: `${originalThread?.title ?? "Untitled Chat"} (Forked)`,
       threadOwnerId: session.userId,
+      title: thread.title + " (Fork)",
     })
     .returning();
 
-  if (!newThread) throw new Error("Failed to create new thread");
+  if (!newThread) {
+    throw new Error("Failed to create new thread");
+  }
 
-  // Copy messages to new thread
+  // Copy messages up to the fork point
+  const messagesToCopy = threadMessages.slice(0, messageIndex + 1);
   await db.insert(messages).values(
-    threadMessages.map((msg: typeof messages.$inferSelect) => ({
-      senderRole: msg.senderRole,
+    messagesToCopy.map((msg) => ({
       threadId: newThread.id,
       textContent: msg.textContent,
-      imageContent: msg.imageContent,
+      senderRole: msg.senderRole,
     }))
   );
 

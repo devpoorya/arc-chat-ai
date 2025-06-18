@@ -12,6 +12,7 @@ import { useState } from "react";
 import { db } from "@/db";
 import { threads } from "@/db/schema/content.sql";
 import { eq } from "drizzle-orm";
+import SettingsDialog from "./settings-dialog";
 
 export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { currentMessages, loading, sidebarExpanded, currentThreadId, setThreadsList, threadsList, setCurrentThreadId } = useMainStore();
@@ -119,20 +120,25 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
       }}
       className="z-0 mt-4 mr-4 ml-auto flex h-[calc(100vh-148px-2vh)] w-full flex-grow flex-col gap-4 overflow-y-scroll"
     >
-      {isLoggedIn && currentThreadId && (
+      {isLoggedIn && (
         <div className="flex items-center gap-2 mb-2">
-          <Button onClick={handleShare} disabled={sharing} variant="outline" size="sm">
-            {sharing ? "Generating..." : "Share Chat"}
-          </Button>
-          {shareLink && (
-            <input
-              className="ml-2 px-2 py-1 border rounded text-black text-xs w-64"
-              value={shareLink}
-              readOnly
-              onClick={e => { (e.target as HTMLInputElement).select(); document.execCommand('copy'); }}
-              title="Click to copy"
-            />
+          {currentThreadId && (
+            <>
+              <Button onClick={handleShare} disabled={sharing} variant="outline" size="sm">
+                {sharing ? "Generating..." : "Share Chat"}
+              </Button>
+              {shareLink && (
+                <input
+                  className="ml-2 px-2 py-1 border rounded text-black text-xs w-64"
+                  value={shareLink}
+                  readOnly
+                  onClick={e => { (e.target as HTMLInputElement).select(); document.execCommand('copy'); }}
+                  title="Click to copy"
+                />
+              )}
+            </>
           )}
+          <SettingsDialog />
         </div>
       )}
       {!currentMessages.length && !loading && (

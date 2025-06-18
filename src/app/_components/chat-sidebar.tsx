@@ -112,7 +112,7 @@ export default function ChatSidebar({
                           role: "system",
                           type: "error",
                           content:
-                            "An error occured while processing your request please try again!",
+                            "An error occured while processing your request please try again! Maybe you need to set an updated OpenRouter API key in the settings (button in the top of the screen).",
                         },
                       ]);
                     });
