@@ -13,6 +13,7 @@ import { db } from "@/db";
 import { threads } from "@/db/schema/content.sql";
 import { eq } from "drizzle-orm";
 import SettingsDialog from "./settings-dialog";
+import React from "react";
 
 export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { currentMessages, loading, sidebarExpanded, currentThreadId, setThreadsList, threadsList, setCurrentThreadId } = useMainStore();
@@ -72,9 +73,15 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
     while ((match = codeBlockRegex.exec(content)) !== null) {
       // Add text before the code block
       if (match.index > lastIndex) {
+        const textContent = content.slice(lastIndex, match.index);
         parts.push(
-          <div key={`text-${lastIndex}`} className="text-sm leading-relaxed" style={{ color: "black" }}>
-            {content.slice(lastIndex, match.index)}
+          <div key={`text-${lastIndex}`} className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "black" }}>
+            {textContent.split('\n').map((line, i, arr) => (
+              <React.Fragment key={i}>
+                {formatTextWithLinks(line)}
+                {i < arr.length - 1 && <br />}
+              </React.Fragment>
+            ))}
           </div>
         );
       }
@@ -103,11 +110,55 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
 
     // Add any remaining text
     if (lastIndex < content.length) {
+      const textContent = content.slice(lastIndex);
       parts.push(
-        <div key={`text-${lastIndex}`} className="text-sm leading-relaxed" style={{ color: "black" }}>
-          {content.slice(lastIndex)}
+        <div key={`text-${lastIndex}`} className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "black" }}>
+          {textContent.split('\n').map((line, i, arr) => (
+            <React.Fragment key={i}>
+              {formatTextWithLinks(line)}
+              {i < arr.length - 1 && <br />}
+            </React.Fragment>
+          ))}
         </div>
       );
+    }
+
+    return parts;
+  };
+
+  const formatTextWithLinks = (text: string) => {
+    // Match markdown links [text](url)
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = linkRegex.exec(text)) !== null) {
+      // Add text before the link
+      if (match.index > lastIndex) {
+        parts.push(text.slice(lastIndex, match.index));
+      }
+
+      // Add the link
+      parts.push(
+        <a
+          key={match.index}
+          href={match[2]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline"
+          style={{ color: '#2563eb' }}
+        >
+          {match[1]}
+        </a>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add any remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.slice(lastIndex));
     }
 
     return parts;

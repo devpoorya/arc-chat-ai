@@ -11,6 +11,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
     OPENROUTER_API_KEY: z.string(),
+    SERPER_API_KEY: z.string(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -23,6 +24,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+    SERPER_API_KEY: process.env.SERPER_API_KEY,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

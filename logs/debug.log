@@ -1,0 +1,367 @@
+[2025-06-18T18:14:46.778Z] Starting sendPromptAction with prompt: latest news?
+[2025-06-18T18:14:46.779Z] Checking if web search is needed for prompt: latest news?
+[2025-06-18T18:14:47.412Z] Search determination response: true
+[2025-06-18T18:14:47.412Z] Will perform search: true
+[2025-06-18T18:14:47.412Z] Needs search: true
+[2025-06-18T18:14:47.412Z] Performing web search for query: latest news?
+[2025-06-18T18:14:47.412Z] Using SERPER_API_KEY: Present
+[2025-06-18T18:14:48.412Z] Search API response status: 200
+[2025-06-18T18:14:48.414Z] Search API response data: {
+  "searchParameters": {
+    "q": "latest news?",
+    "type": "search",
+    "num": 3,
+    "engine": "google"
+  },
+  "organic": [
+    {
+      "title": "CNN: Breaking News, Latest News and Videos",
+      "link": "https://www.cnn.com/",
+      "snippet": "View the latest news and breaking news today for U.S., world, weather, entertainment, politics and health at CNN.com.",
+      "date": "2 hours ago",
+      "sitelinks": [
+        {
+          "title": "CNN",
+          "link": "https://edition.cnn.com/"
+        },
+        {
+          "title": "World",
+          "link": "https://www.cnn.com/world"
+        },
+        {
+          "title": "US",
+          "link": "https://www.cnn.com/us"
+        },
+        {
+          "title": "Politics",
+          "link": "https://www.cnn.com/politics"
+        }
+      ],
+      "position": 1
+    },
+    {
+      "title": "Fox News - Breaking News Updates | Latest News Headlines ...",
+      "link": "https://www.foxnews.com/",
+      "snippet": "Latest Breaking News Today from Fox News · Indian American state senator wins Democratic primary for Virginia lieutenant governor - Fox News · G7 world leaders ...",
+      "date": "3 hours ago",
+      "sitelinks": [
+        {
+          "title": "Politics, Policy and Political...",
+          "link": "https://www.foxnews.com/politics?param=5c1e6e6c"
+        },
+        {
+          "title": "Latest News | Videos",
+          "link": "https://www.foxnews.com/video/topics/latest-news-video"
+        },
+        {
+          "title": "Politics",
+          "link": "https://www.foxnews.com/politics"
+        },
+        {
+          "title": "U.S.",
+          "link": "https://www.foxnews.com/us"
+        }
+      ],
+      "position": 2
+    },
+    {
+      "title": "Google News",
+      "link": "https://news.google.com/",
+      "snippet": "Trump weighs joining Israel in bombing Iran · Supreme Court upholds Tennessee ban on transgender youth medical care · Iran's Supreme Leader Warns Of 'Serious ...",
+      "date": "2 hours ago",
+      "position": 3
+    }
+  ],
+  "relatedSearches": [
+    {
+      "query": "ESPN"
+    },
+    {
+      "query": "Local news"
+    },
+    {
+      "query": "Breaking news headlines today"
+    },
+    {
+      "query": "Breaking news Trump"
+    },
+    {
+      "query": "Fox News"
+    },
+    {
+      "query": "News today in the world"
+    },
+    {
+      "query": "World News"
+    },
+    {
+      "query": "Newsmax"
+    },
+    {
+      "query": "MSNBC news"
+    }
+  ],
+  "credits": 1
+}
+[2025-06-18T18:14:48.415Z] Number of search results: 3
+[2025-06-18T18:14:48.415Z] Formatted search results: CNN: Breaking News, Latest News and Videos
+View the latest news and breaking news today for U.S., world, weather, entertainment, politics and health at CNN.com.
+Source: https://www.cnn.com/
+
+Fox News - Breaking News Updates | Latest News Headlines ...
+Latest Breaking News Today from Fox News · Indian American state senator wins Democratic primary for Virginia lieutenant governor - Fox News · G7 world leaders ...
+Source: https://www.foxnews.com/
+
+Google News
+Trump weighs joining Israel in bombing Iran · Supreme Court upholds Tennessee ban on transgender youth medical care · Iran's Supreme Leader Warns Of 'Serious ...
+Source: https://news.google.com/
+[2025-06-18T18:14:48.415Z] Search completed successfully
+[2025-06-18T18:14:48.415Z] Adding search results to context
+[2025-06-18T18:14:48.415Z] Final formatted messages: [
+  {
+    "role": "system",
+    "content": "Here are some relevant search results that may help answer the user's question:\n\nCNN: Breaking News, Latest News and Videos\nView the latest news and breaking news today for U.S., world, weather, entertainment, politics and health at CNN.com.\nSource: https://www.cnn.com/\n\nFox News - Breaking News Updates | Latest News Headlines ...\nLatest Breaking News Today from Fox News · Indian American state senator wins Democratic primary for Virginia lieutenant governor - Fox News · G7 world leaders ...\nSource: https://www.foxnews.com/\n\nGoogle News\nTrump weighs joining Israel in bombing Iran · Supreme Court upholds Tennessee ban on transgender youth medical care · Iran's Supreme Leader Warns Of 'Serious ...\nSource: https://news.google.com/\n\nPlease use this information to provide a more accurate response."
+  }
+]
+[2025-06-18T18:15:43.584Z] Starting sendPromptAction with prompt: give me latest news about OpenAI
+[2025-06-18T18:15:43.585Z] Checking if web search is needed for prompt: give me latest news about OpenAI
+[2025-06-18T18:15:44.140Z] Search determination response: true
+[2025-06-18T18:15:44.140Z] Will perform search: true
+[2025-06-18T18:15:44.140Z] Needs search: true
+[2025-06-18T18:15:44.141Z] Performing web search for query: give me latest news about OpenAI
+[2025-06-18T18:15:44.141Z] Using SERPER_API_KEY: Present
+[2025-06-18T18:15:44.908Z] Search API response status: 200
+[2025-06-18T18:15:44.914Z] Search API response data: {
+  "searchParameters": {
+    "q": "give me latest news about OpenAI",
+    "type": "search",
+    "num": 3,
+    "engine": "google"
+  },
+  "organic": [
+    {
+      "title": "OpenAI News",
+      "link": "https://openai.com/news/",
+      "snippet": "Introducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.",
+      "sitelinks": [
+        {
+          "title": "Company",
+          "link": "https://openai.com/news/company-announcements/"
+        },
+        {
+          "title": "Research",
+          "link": "https://openai.com/news/research/"
+        },
+        {
+          "title": "New tools and features",
+          "link": "https://openai.com/index/new-tools-and-features-in-the-responses-api/"
+        },
+        {
+          "title": "Product",
+          "link": "https://openai.com/news/product-releases/"
+        }
+      ],
+      "position": 1
+    },
+    {
+      "title": "OpenAI is winding down its work with Scale AI, founder is joining Meta",
+      "link": "https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html",
+      "snippet": "OpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta",
+      "date": "2 hours ago",
+      "position": 2
+    }
+  ],
+  "topStories": [
+    {
+      "title": "OpenAI Is Phasing Out Scale AI Work Following Startup’s Meta Deal",
+      "link": "https://www.bloomberg.com/news/articles/2025-06-18/openai-is-phasing-out-its-work-with-scale-ai-after-meta-deal",
+      "source": "Bloomberg.com",
+      "date": "3 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZAKCI5GYmsZhMx90n2B4ad-bWNwxRnESCSKfHNAknZoTGtCb6LWuC0N0pfw&s"
+    },
+    {
+      "title": "OpenAI is winding down its work with Scale AI, whose founder is joining Meta",
+      "link": "https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html",
+      "source": "CNBC",
+      "date": "2 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-zdkgg9C46rmROvtBbqqlsBOuCn3dYKLazWGF7I3kHbWjMY5hg9La7t_4kg&s"
+    },
+    {
+      "title": "OpenAI boss: Meta offering $100m plus to poach my staff",
+      "link": "https://www.bbc.com/news/articles/c8730088e5do",
+      "source": "BBC",
+      "date": "4 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrId0ss7x4-63uWEWQFjW904nYAPHT01hygKcidevSbwJToKDnpf3ojfH9LQ&s"
+    }
+  ],
+  "relatedSearches": [
+    {
+      "query": "xAI"
+    },
+    {
+      "query": "Give me latest news about openai today"
+    },
+    {
+      "query": "Give me latest news about openai elon musk"
+    },
+    {
+      "query": "OpenAI announcement today"
+    },
+    {
+      "query": "OpenAI news"
+    },
+    {
+      "query": "OpenAI blog"
+    },
+    {
+      "query": "ChatGPT news"
+    },
+    {
+      "query": "OpenAI news Reddit"
+    },
+    {
+      "query": "OpenAI 12 days"
+    }
+  ],
+  "credits": 1
+}
+[2025-06-18T18:15:44.915Z] Number of search results: 2
+[2025-06-18T18:15:44.915Z] Formatted search results: OpenAI News
+Introducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.
+Source: https://openai.com/news/
+
+OpenAI is winding down its work with Scale AI, founder is joining Meta
+OpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta
+Source: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html
+[2025-06-18T18:15:44.915Z] Search completed successfully
+[2025-06-18T18:15:44.915Z] Adding search results to context
+[2025-06-18T18:15:44.915Z] Final formatted messages: [
+  {
+    "role": "system",
+    "content": "Here are some relevant search results that may help answer the user's question:\n\nOpenAI News\nIntroducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.\nSource: https://openai.com/news/\n\nOpenAI is winding down its work with Scale AI, founder is joining Meta\nOpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta\nSource: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html\n\nPlease use this information to provide a more accurate response."
+  }
+]
+[2025-06-18T18:17:00.909Z] Starting sendPromptAction with prompt: give me latest news about OpenAI
+[2025-06-18T18:17:00.909Z] Checking if web search is needed for prompt: give me latest news about OpenAI
+[2025-06-18T18:17:01.954Z] Search determination response: true
+[2025-06-18T18:17:01.954Z] Will perform search: true
+[2025-06-18T18:17:01.955Z] Needs search: true
+[2025-06-18T18:17:01.955Z] Performing web search for query: give me latest news about OpenAI
+[2025-06-18T18:17:01.955Z] Using SERPER_API_KEY: Present
+[2025-06-18T18:17:02.647Z] Search API response status: 200
+[2025-06-18T18:17:02.650Z] Search API response data: {
+  "searchParameters": {
+    "q": "give me latest news about OpenAI",
+    "type": "search",
+    "num": 3,
+    "engine": "google"
+  },
+  "organic": [
+    {
+      "title": "OpenAI News",
+      "link": "https://openai.com/news/",
+      "snippet": "Introducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.",
+      "sitelinks": [
+        {
+          "title": "Company",
+          "link": "https://openai.com/news/company-announcements/"
+        },
+        {
+          "title": "Research",
+          "link": "https://openai.com/news/research/"
+        },
+        {
+          "title": "New tools and features",
+          "link": "https://openai.com/index/new-tools-and-features-in-the-responses-api/"
+        },
+        {
+          "title": "Product",
+          "link": "https://openai.com/news/product-releases/"
+        }
+      ],
+      "position": 1
+    },
+    {
+      "title": "OpenAI is winding down its work with Scale AI, founder is joining Meta",
+      "link": "https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html",
+      "snippet": "OpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta",
+      "date": "2 hours ago",
+      "position": 2
+    }
+  ],
+  "topStories": [
+    {
+      "title": "OpenAI Is Phasing Out Scale AI Work Following Startup’s Meta Deal",
+      "link": "https://www.bloomberg.com/news/articles/2025-06-18/openai-is-phasing-out-its-work-with-scale-ai-after-meta-deal",
+      "source": "Bloomberg.com",
+      "date": "3 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZAKCI5GYmsZhMx90n2B4ad-bWNwxRnESCSKfHNAknZoTGtCb6LWuC0N0pfw&s"
+    },
+    {
+      "title": "OpenAI is winding down its work with Scale AI, whose founder is joining Meta",
+      "link": "https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html",
+      "source": "CNBC",
+      "date": "2 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-zdkgg9C46rmROvtBbqqlsBOuCn3dYKLazWGF7I3kHbWjMY5hg9La7t_4kg&s"
+    },
+    {
+      "title": "OpenAI boss: Meta offering $100m plus to poach my staff",
+      "link": "https://www.bbc.com/news/articles/c8730088e5do",
+      "source": "BBC",
+      "date": "4 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrId0ss7x4-63uWEWQFjW904nYAPHT01hygKcidevSbwJToKDnpf3ojfH9LQ&s"
+    }
+  ],
+  "relatedSearches": [
+    {
+      "query": "xAI"
+    },
+    {
+      "query": "Give me latest news about openai today"
+    },
+    {
+      "query": "Give me latest news about openai elon musk"
+    },
+    {
+      "query": "OpenAI announcement today"
+    },
+    {
+      "query": "OpenAI news"
+    },
+    {
+      "query": "OpenAI blog"
+    },
+    {
+      "query": "ChatGPT news"
+    },
+    {
+      "query": "OpenAI news Reddit"
+    },
+    {
+      "query": "OpenAI 12 days"
+    }
+  ],
+  "credits": 1
+}
+[2025-06-18T18:17:02.651Z] Number of search results: 2
+[2025-06-18T18:17:02.651Z] Formatted search results: OpenAI News
+Introducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.
+Source: https://openai.com/news/
+
+OpenAI is winding down its work with Scale AI, founder is joining Meta
+OpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta
+Source: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html
+[2025-06-18T18:17:02.652Z] Search completed successfully
+[2025-06-18T18:17:02.652Z] Adding search results to context
+[2025-06-18T18:17:02.652Z] Final formatted messages: [
+  {
+    "role": "system",
+    "content": "Here are some relevant search results that may help answer the user's question:\n\nOpenAI News\nIntroducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.\nSource: https://openai.com/news/\n\nOpenAI is winding down its work with Scale AI, founder is joining Meta\nOpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta\nSource: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html\n\nPlease use this information to provide a more accurate response. Please provide the sources (links) of each info you use."
+  }
+]
+[2025-06-18T18:23:24.345Z] Starting sendPromptAction with prompt: hi
+[2025-06-18T18:23:24.345Z] Checking if web search is needed for prompt: hi
+[2025-06-18T18:23:26.521Z] Search determination response: false
+[2025-06-18T18:23:26.521Z] Will perform search: false
+[2025-06-18T18:23:26.522Z] Needs search: false
+[2025-06-18T18:23:26.522Z] Final formatted messages: []
