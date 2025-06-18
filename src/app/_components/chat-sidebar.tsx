@@ -54,6 +54,7 @@ export default function ChatSidebar({
     >
       <h1
         className="text-foreground mb-4 flex items-center justify-between px-4 text-xl font-bold"
+        style={{ color: "black" }}
         onClick={() => {
           if (sidebarExpanded) {
             height.set("auto");
@@ -77,12 +78,13 @@ export default function ChatSidebar({
           >
             <button
               className="hover:bg-primary mx-2 mt-2 mb-2 flex cursor-pointer items-center justify-center gap-1 rounded-lg px-4 py-2 text-sm font-medium transition-all"
+              style={{ color: "black" }}
               onClick={() => {
                 setCurrentThreadId(null);
                 setCurrentMessages([]);
               }}
             >
-              <PlusIcon className="size-4" />
+              <PlusIcon className="size-4" style={{ color: "black" }} />
               New Chat
             </button>
             {threadsInStore?.map((t) => (
@@ -119,6 +121,7 @@ export default function ChatSidebar({
                   currentThreadId === t.id && "bg-primary/10!",
                   "glass mx-2 flex cursor-pointer items-center gap-4 rounded-lg! px-4 py-2 text-sm font-semibold",
                 )}
+                style={{ color: "black" }}
               >
                 {t.title}
               </div>

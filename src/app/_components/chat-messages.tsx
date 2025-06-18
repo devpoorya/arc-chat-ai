@@ -3,9 +3,29 @@ import { cn } from "@/lib/utils";
 import { useMainStore } from "../store/mainStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
+import { GitForkIcon } from "lucide-react";
+import { forkThreadAction } from "@/server/actions/prompt-actions";
+import { Button } from "@/components/ui/button";
 
 export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
-  const { currentMessages, loading, sidebarExpanded } = useMainStore();
+  const { currentMessages, loading, sidebarExpanded, currentThreadId, setThreadsList, threadsList, setCurrentThreadId } = useMainStore();
+
+  const handleFork = async (index: number) => {
+    if (!currentThreadId) return;
+    
+    try {
+      const newThread = await forkThreadAction({
+        threadId: currentThreadId,
+        messageIndex: index,
+      });
+      
+      // Update threads list and switch to new thread
+      setThreadsList([newThread, ...threadsList]);
+    } catch (error) {
+      console.error("Failed to fork thread:", error);
+    }
+  };
+
   return (
     <motion.div
       animate={{
@@ -46,11 +66,25 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
         >
           <div className="flex-grow">
             {m.content.split("\n").map((l, i) => (
-              <div key={i} className="text-sm leading-relaxed">
+              <div key={i} className="text-sm leading-relaxed" style={{ color: "black" }}>
                 {l}
               </div>
             ))}
+
+
+
+          
           </div>
+          {currentThreadId && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className=""
+              onClick={() => handleFork(i)}
+            >
+              <GitForkIcon className="h-4 w-4" style={{ color: "black" }} />
+            </Button>
+          )}
         </div>
       ))}
       {loading && (

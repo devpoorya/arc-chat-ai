@@ -120,3 +120,50 @@ export async function getThreadMessagesAction({
   });
   return messageList;
 }
+
+export async function forkThreadAction({
+  threadId,
+  messageIndex,
+}: {
+  threadId: number;
+  messageIndex: number;
+}) {
+  const { session } = await validateRequest();
+  if (!session) throw new Error("Unauthorized");
+
+  // Get all messages up to the specified index
+  const threadMessages = await db.query.messages.findMany({
+    where: eq(messages.threadId, threadId),
+    orderBy: asc(messages.createdAt),
+    limit: messageIndex + 1,
+  });
+
+  if (!threadMessages.length) throw new Error("No messages found");
+
+  // Create new thread with the same title but with "(Forked)" suffix
+  const originalThread = await db.query.threads.findFirst({
+    where: eq(threads.id, threadId),
+  });
+
+  const [newThread] = await db
+    .insert(threads)
+    .values({
+      title: `${originalThread?.title ?? "Untitled Chat"} (Forked)`,
+      threadOwnerId: session.userId,
+    })
+    .returning();
+
+  if (!newThread) throw new Error("Failed to create new thread");
+
+  // Copy messages to new thread
+  await db.insert(messages).values(
+    threadMessages.map((msg: typeof messages.$inferSelect) => ({
+      senderRole: msg.senderRole,
+      threadId: newThread.id,
+      textContent: msg.textContent,
+      imageContent: msg.imageContent,
+    }))
+  );
+
+  return newThread;
+}

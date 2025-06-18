@@ -111,6 +111,7 @@ export default function ChatBox() {
                     ? "glass text-neutral-800"
                     : "text-white hover:text-white",
                 )}
+                style={{ color: responseType === type.id ? "black" : "grey", fontWeight: responseType === type.id ? "bold" : "normal" }}
               >
                 {type.label}
               </button>
