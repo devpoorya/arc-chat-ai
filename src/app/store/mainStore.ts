@@ -21,6 +21,8 @@ type MainStore = {
   setSidebarExpanded: (sidebarExpanded: boolean) => void;
   openRouterApiKey: string | null;
   setOpenRouterApiKey: (key: string | null) => void;
+  serperApiKey: string | null;
+  setSerperApiKey: (key: string | null) => void;
 };
 
 export const useMainStore = create<MainStore>()(
@@ -40,6 +42,8 @@ export const useMainStore = create<MainStore>()(
       setSidebarExpanded: (sidebarExpanded: boolean) => set({ sidebarExpanded }),
       openRouterApiKey: null,
       setOpenRouterApiKey: (key: string | null) => set({ openRouterApiKey: key }),
+      serperApiKey: null,
+      setSerperApiKey: (key: string | null) => set({ serperApiKey: key }),
     }),
     {
       name: "arc-chat-storage",

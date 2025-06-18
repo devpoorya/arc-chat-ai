@@ -217,7 +217,7 @@ export default function ChatBox() {
                   }, 0);
                 }}
                 value={prompt}
-                style={{ height: textboxHeight }}
+                style={{ height: textboxHeight, color: 'black' }}
                 placeholder="Write your message here..."
                 className="w-full resize-none text-left text-base outline-none"
               />

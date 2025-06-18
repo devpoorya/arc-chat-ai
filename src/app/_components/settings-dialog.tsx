@@ -16,14 +16,16 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export default function SettingsDialog() {
-  const { openRouterApiKey, setOpenRouterApiKey } = useMainStore();
+  const { openRouterApiKey, setOpenRouterApiKey, serperApiKey, setSerperApiKey } = useMainStore();
   const [apiKey, setApiKey] = useState(openRouterApiKey || "");
+  const [serperKey, setSerperKey] = useState(serperApiKey || "");
   const [open, setOpen] = useState(false);
 
   const handleSave = () => {
     setOpenRouterApiKey(apiKey);
+    setSerperApiKey(serperKey);
     setOpen(false);
-    toast.success("API key saved successfully");
+    toast.success("API keys saved successfully");
   };
 
   return (
@@ -37,7 +39,7 @@ export default function SettingsDialog() {
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
-            Configure your OpenRouter API key to use the chat service.
+            Configure your API keys to use the chat and web search services.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -51,6 +53,18 @@ export default function SettingsDialog() {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="Enter your OpenRouter API key"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="serper-api-key" className="text-sm font-medium">
+              Serper API Key
+            </label>
+            <Input
+              id="serper-api-key"
+              type="password"
+              value={serperKey}
+              onChange={(e) => setSerperKey(e.target.value)}
+              placeholder="Enter your Serper API key"
             />
           </div>
           <Button onClick={handleSave} className="w-full">

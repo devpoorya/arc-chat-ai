@@ -229,15 +229,15 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
               <div className="mt-2 flex flex-wrap gap-2">
                 {m.files.map((file, index) => (
                   <div key={index} className="relative">
-                    {file.type.startsWith('image/') ? (
+                    {file && file.type && file.type.startsWith('image/') ? (
                       <img
                         src={URL.createObjectURL(file)}
-                        alt={file.name}
+                        alt={file.name || 'Image'}
                         className="max-h-48 rounded-md"
                       />
                     ) : (
                       <div className="flex items-center gap-2 rounded-md bg-neutral-200 px-3 py-2">
-                        <span className="text-sm text-neutral-700">{file.name}</span>
+                        <span className="text-sm text-neutral-700">{file?.name || 'Unknown file'}</span>
                       </div>
                     )}
                   </div>

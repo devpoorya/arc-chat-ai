@@ -365,3 +365,169 @@ Source: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-sca
 [2025-06-18T18:23:26.521Z] Will perform search: false
 [2025-06-18T18:23:26.522Z] Needs search: false
 [2025-06-18T18:23:26.522Z] Final formatted messages: []
+[2025-06-18T18:29:57.236Z] Starting sendPromptAction with prompt: Hello!
+[2025-06-18T18:29:57.236Z] Checking if web search is needed for prompt: Hello!
+[2025-06-18T18:29:59.551Z] Search determination response: false
+[2025-06-18T18:29:59.551Z] Will perform search: false
+[2025-06-18T18:29:59.552Z] Needs search: false
+[2025-06-18T18:29:59.552Z] Final formatted messages: []
+[2025-06-18T18:31:55.472Z] Starting sendPromptAction with prompt: Hi!
+[2025-06-18T18:31:55.473Z] Checking if web search is needed for prompt: Hi!
+[2025-06-18T18:31:57.472Z] Search determination response: false
+[2025-06-18T18:31:57.472Z] Will perform search: false
+[2025-06-18T18:31:57.473Z] Needs search: false
+[2025-06-18T18:31:57.473Z] Final formatted messages: []
+[2025-06-18T18:33:00.638Z] Starting sendPromptAction with prompt: What is this image?
+[2025-06-18T18:33:00.638Z] Checking if web search is needed for prompt: What is this image?
+[2025-06-18T18:33:01.197Z] Search determination response: false
+[2025-06-18T18:33:01.197Z] Will perform search: false
+[2025-06-18T18:33:01.198Z] Needs search: false
+[2025-06-18T18:33:01.198Z] Final formatted messages: []
+[2025-06-18T18:35:23.110Z] Starting sendPromptAction with prompt: Give me the latest news about OpenAI
+[2025-06-18T18:35:23.110Z] Checking if web search is needed for prompt: Give me the latest news about OpenAI
+[2025-06-18T18:35:23.909Z] Search determination response: true
+[2025-06-18T18:35:23.910Z] Will perform search: true
+[2025-06-18T18:35:23.910Z] Needs search: true
+[2025-06-18T18:35:23.911Z] Performing web search for query: Give me the latest news about OpenAI
+[2025-06-18T18:35:23.911Z] Using SERPER_API_KEY: Present
+[2025-06-18T18:35:24.804Z] Search API response status: 200
+[2025-06-18T18:35:24.809Z] Search API response data: {
+  "searchParameters": {
+    "q": "Give me the latest news about OpenAI",
+    "type": "search",
+    "num": 3,
+    "engine": "google"
+  },
+  "organic": [
+    {
+      "title": "OpenAI News",
+      "link": "https://openai.com/news/",
+      "snippet": "Introducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.",
+      "sitelinks": [
+        {
+          "title": "Company",
+          "link": "https://openai.com/news/company-announcements/"
+        },
+        {
+          "title": "Research",
+          "link": "https://openai.com/news/research/"
+        },
+        {
+          "title": "New tools and features",
+          "link": "https://openai.com/index/new-tools-and-features-in-the-responses-api/"
+        },
+        {
+          "title": "Product",
+          "link": "https://openai.com/news/product-releases/"
+        }
+      ],
+      "position": 1
+    },
+    {
+      "title": "OpenAI is winding down its work with Scale AI, founder is joining Meta",
+      "link": "https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html",
+      "snippet": "OpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta",
+      "date": "2 hours ago",
+      "position": 2
+    }
+  ],
+  "topStories": [
+    {
+      "title": "OpenAI Is Phasing Out Scale AI Work Following Startup’s Meta Deal",
+      "link": "https://www.bloomberg.com/news/articles/2025-06-18/openai-is-phasing-out-its-work-with-scale-ai-after-meta-deal",
+      "source": "Bloomberg.com",
+      "date": "4 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZAKCI5GYmsZhMx90n2B4ad-bWNwxRnESCSKfHNAknZoTGtCb6LWuC0N0pfw&s"
+    },
+    {
+      "title": "OpenAI boss: Meta offering $100m plus to poach my staff",
+      "link": "https://www.bbc.com/news/articles/c8730088e5do",
+      "source": "BBC",
+      "date": "4 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrId0ss7x4-63uWEWQFjW904nYAPHT01hygKcidevSbwJToKDnpf3ojfH9LQ&s"
+    },
+    {
+      "title": "OpenAI is winding down its work with Scale AI, whose founder is joining Meta",
+      "link": "https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html",
+      "source": "CNBC",
+      "date": "2 hours ago",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVi8RiFPbT4o2XvVj4_FddH4SSilTxZdTmW9T3kdmUWBKeff-loBcB6luAQg&s"
+    }
+  ],
+  "relatedSearches": [
+    {
+      "query": "xAI"
+    },
+    {
+      "query": "Give me the latest news about openai today"
+    },
+    {
+      "query": "Give me the latest news about openai elon musk"
+    },
+    {
+      "query": "OpenAI announcement today"
+    },
+    {
+      "query": "OpenAI news"
+    },
+    {
+      "query": "ChatGPT news"
+    },
+    {
+      "query": "OpenAI news Reddit"
+    },
+    {
+      "query": "OpenAI blog"
+    },
+    {
+      "query": "OpenAI 12 days"
+    }
+  ],
+  "credits": 1
+}
+[2025-06-18T18:35:24.810Z] Number of search results: 2
+[2025-06-18T18:35:24.810Z] Formatted search results: OpenAI News
+Introducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.
+Source: https://openai.com/news/
+
+OpenAI is winding down its work with Scale AI, founder is joining Meta
+OpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta
+Source: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html
+[2025-06-18T18:35:24.811Z] Search completed successfully
+[2025-06-18T18:35:24.811Z] Adding search results to context
+[2025-06-18T18:35:24.811Z] Final formatted messages: [
+  {
+    "role": "system",
+    "content": "Here are some relevant search results that may help answer the user's question:\n\nOpenAI News\nIntroducing our latest image generation model in the API. Product Apr 23, 2025. GPT-4.5. Introducing GPT-4.5. Release Feb 27, 2025. o3-mini > cover image.\nSource: https://openai.com/news/\n\nOpenAI is winding down its work with Scale AI, founder is joining Meta\nOpenAI is winding down its work with Scale AI, the artificial intelligence startup that received a multibillion-dollar investment from Meta\nSource: https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html\n\nPlease use this information to provide a more accurate response. Please provide the sources (links) of each info you use, in markdown format."
+  }
+]
+[2025-06-18T18:35:41.609Z] Starting sendPromptAction with prompt: what is openai?
+[2025-06-18T18:35:41.609Z] Checking if web search is needed for prompt: what is openai?
+[2025-06-18T18:35:42.285Z] Search determination response: false
+[2025-06-18T18:35:42.285Z] Will perform search: false
+[2025-06-18T18:35:42.285Z] Needs search: false
+[2025-06-18T18:35:42.285Z] Final formatted messages: [
+  {
+    "role": "user",
+    "content": "Give me the latest news about OpenAI"
+  },
+  {
+    "role": "system",
+    "content": "Here are some of the latest news updates about OpenAI:\n\n1. **GPT-4.5 Release**: OpenAI has introduced GPT-4.5, the latest version of its language model, which was released on February 27, 2025. This new model is part of their ongoing efforts to enhance the capabilities of AI language processing. [Source](https://openai.com/news/)\n\n2. **Image Generation Model**: OpenAI has also launched a new image generation model available through their API as of April 23, 2025. This model is designed to improve the quality and creativity of AI-generated images. [Source](https://openai.com/news/)\n\n3. **Partnership with Scale AI**: OpenAI is winding down its collaboration with Scale AI. This decision comes as Scale AI's founder is set to join Meta, following a significant investment from Meta into the startup. [Source](https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html)\n\nThese updates reflect OpenAI's recent developments in AI technology and strategic partnerships."
+  }
+]
+[2025-06-18T18:36:03.682Z] Starting sendPromptAction with prompt: what is gemini?
+[2025-06-18T18:36:03.683Z] Checking if web search is needed for prompt: what is gemini?
+[2025-06-18T18:36:05.756Z] Search determination response: false
+[2025-06-18T18:36:05.756Z] Will perform search: false
+[2025-06-18T18:36:05.757Z] Needs search: false
+[2025-06-18T18:36:05.757Z] Final formatted messages: [
+  {
+    "role": "user",
+    "content": "Give me the latest news about OpenAI"
+  },
+  {
+    "role": "system",
+    "content": "Here are some of the latest news updates about OpenAI:\n\n1. **GPT-4.5 Release**: OpenAI has introduced GPT-4.5, the latest version of its language model, which was released on February 27, 2025. This new model is part of their ongoing efforts to enhance the capabilities of AI language processing. [Source](https://openai.com/news/)\n\n2. **Image Generation Model**: OpenAI has also launched a new image generation model available through their API as of April 23, 2025. This model is designed to improve the quality and creativity of AI-generated images. [Source](https://openai.com/news/)\n\n3. **Partnership with Scale AI**: OpenAI is winding down its collaboration with Scale AI. This decision comes as Scale AI's founder is set to join Meta, following a significant investment from Meta into the startup. [Source](https://www.cnbc.com/2025/06/18/openai-is-winding-down-its-work-with-scale-ai-founder-is-joining-meta.html)\n\nThese updates reflect OpenAI's recent developments in AI technology and strategic partnerships."
+  }
+]
