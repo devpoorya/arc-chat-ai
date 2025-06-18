@@ -1,0 +1,1 @@
+ALTER TABLE "threads" ADD COLUMN "share_id" varchar(10);

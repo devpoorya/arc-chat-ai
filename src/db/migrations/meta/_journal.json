@@ -8,6 +8,13 @@
       "when": 1749630260310,
       "tag": "0000_glorious_hitman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750267465478,
+      "tag": "0001_colorful_lord_hawal",
+      "breakpoints": true
     }
   ]
 }

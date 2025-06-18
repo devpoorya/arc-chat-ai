@@ -8,9 +8,15 @@ import { forkThreadAction } from "@/server/actions/prompt-actions";
 import { Button } from "@/components/ui/button";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useState } from "react";
+import { db } from "@/db";
+import { threads } from "@/db/schema/content.sql";
+import { eq } from "drizzle-orm";
 
 export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { currentMessages, loading, sidebarExpanded, currentThreadId, setThreadsList, threadsList, setCurrentThreadId } = useMainStore();
+  const [shareLink, setShareLink] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
 
   const handleFork = async (index: number) => {
     if (!currentThreadId) return;
@@ -26,6 +32,34 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
     } catch (error) {
       console.error("Failed to fork thread:", error);
     }
+  };
+
+  const handleShare = async () => {
+    if (!currentThreadId) return;
+    setSharing(true);
+    try {
+      // Fetch the thread to check for existing shareId
+      const thread = threadsList.find(t => t.id === currentThreadId);
+      let shareId = thread?.shareId;
+      if (!shareId) {
+        // Generate a random 8-character string
+        shareId = Math.random().toString(36).substring(2, 10);
+        // Update the thread in the database (call an API route you will create)
+        await fetch(`/api/share-thread`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ threadId: currentThreadId, shareId }),
+        });
+        // Update local state
+        setThreadsList(
+          threadsList.map(t => t.id === currentThreadId ? { ...t, shareId: shareId ?? null } : t)
+        );
+      }
+      setShareLink(`${window.location.origin}/share/${shareId}`);
+    } catch (e) {
+      alert("Failed to generate share link");
+    }
+    setSharing(false);
   };
 
   const renderMessageContent = (content: string) => {
@@ -85,6 +119,22 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
       }}
       className="z-0 mt-4 mr-4 ml-auto flex h-[calc(100vh-148px-2vh)] w-full flex-grow flex-col gap-4 overflow-y-scroll"
     >
+      {isLoggedIn && currentThreadId && (
+        <div className="flex items-center gap-2 mb-2">
+          <Button onClick={handleShare} disabled={sharing} variant="outline" size="sm">
+            {sharing ? "Generating..." : "Share Chat"}
+          </Button>
+          {shareLink && (
+            <input
+              className="ml-2 px-2 py-1 border rounded text-black text-xs w-64"
+              value={shareLink}
+              readOnly
+              onClick={e => { (e.target as HTMLInputElement).select(); document.execCommand('copy'); }}
+              title="Click to copy"
+            />
+          )}
+        </div>
+      )}
       {!currentMessages.length && !loading && (
         <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center text-white/80">
           {!isLoggedIn ? (

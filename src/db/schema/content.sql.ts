@@ -17,6 +17,7 @@ export const threads = pgTable("threads", {
   threadOwnerId: varchar("thread_owner_id", { length: 36 })
     .notNull()
     .references(() => users.id),
+  shareId: varchar("share_id", { length: 10 }),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
