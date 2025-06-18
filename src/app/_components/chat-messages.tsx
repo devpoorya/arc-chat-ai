@@ -6,6 +6,8 @@ import { motion } from "motion/react";
 import { GitForkIcon } from "lucide-react";
 import { forkThreadAction } from "@/server/actions/prompt-actions";
 import { Button } from "@/components/ui/button";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { currentMessages, loading, sidebarExpanded, currentThreadId, setThreadsList, threadsList, setCurrentThreadId } = useMainStore();
@@ -24,6 +26,56 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
     } catch (error) {
       console.error("Failed to fork thread:", error);
     }
+  };
+
+  const renderMessageContent = (content: string) => {
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = codeBlockRegex.exec(content)) !== null) {
+      // Add text before the code block
+      if (match.index > lastIndex) {
+        parts.push(
+          <div key={`text-${lastIndex}`} className="text-sm leading-relaxed" style={{ color: "black" }}>
+            {content.slice(lastIndex, match.index)}
+          </div>
+        );
+      }
+
+      // Add the code block with syntax highlighting
+      const language = match[1] || 'text';
+      const code = match[2]?.trim() || '';
+      parts.push(
+        <div key={`code-${match.index}`} className="my-2">
+          <SyntaxHighlighter
+            language={language}
+            style={vscDarkPlus}
+            customStyle={{
+              margin: 0,
+              borderRadius: '0.375rem',
+              fontSize: '0.875rem',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add any remaining text
+    if (lastIndex < content.length) {
+      parts.push(
+        <div key={`text-${lastIndex}`} className="text-sm leading-relaxed" style={{ color: "black" }}>
+          {content.slice(lastIndex)}
+        </div>
+      );
+    }
+
+    return parts;
   };
 
   return (
@@ -65,11 +117,7 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
           )}
         >
           <div className="flex-grow">
-            {m.content.split("\n").map((l, i) => (
-              <div key={i} className="text-sm leading-relaxed" style={{ color: "black" }}>
-                {l}
-              </div>
-            ))}
+            {renderMessageContent(m.content)}
             {m.files && m.files.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-2">
                 {m.files.map((file, index) => (
