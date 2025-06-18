@@ -6,10 +6,10 @@ import {
 } from "@/components/ui/popover";
 import { SUPPORTED_MODELS } from "@/lib/models";
 import { sendPromptAction } from "@/server/actions/prompt-actions";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useMainStore } from "../store/mainStore";
 import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, SendHorizonalIcon } from "lucide-react";
+import { ChevronDownIcon, SendHorizonalIcon, PaperclipIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const RESPONSE_TYPES = [
@@ -34,10 +34,24 @@ export default function ChatBox() {
   const [selectedModel, setSelectedModel] = useState(SUPPORTED_MODELS[0]!);
   const [responseType, setResponseType] =
     useState<(typeof RESPONSE_TYPES)[number]["id"]>("normal");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const validFiles = files.filter(file => 
+      file.type.startsWith('image/') || file.type === 'application/pdf'
+    );
+    setSelectedFiles(prev => [...prev, ...validFiles]);
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const submitPrompt = () => {
-    if (prompt.length < 1) return;
-    if (prompt.split("\n").every((l) => l.length < 1)) return;
+    if (prompt.length < 1 && selectedFiles.length === 0) return;
+    if (prompt.split("\n").every((l) => l.length < 1) && selectedFiles.length === 0) return;
     if (loading) return;
 
     const existingMessages = currentMessages;
@@ -47,17 +61,29 @@ export default function ChatBox() {
         role: "user" as const,
         content: prompt,
         type: "normal" as const,
+        files: selectedFiles,
       },
     ];
     setCurrentMessages(updatedMessages);
     setLoading(true);
 
+    // Create FormData to send files
+    const formData = new FormData();
+    formData.append('prompt', prompt);
+    formData.append('modelId', selectedModel.id);
+    formData.append('threadId', currentThreadId?.toString() || '');
+    formData.append('responseType', responseType);
+    selectedFiles.forEach((file, index) => {
+      formData.append(`file${index}`, file);
+    });
+
     sendPromptAction({
       prompt: prompt,
       modelId: selectedModel.id,
-      existingMessages: existingMessages, // not including the current
+      existingMessages: existingMessages,
       threadId: currentThreadId,
       responseType: responseType,
+      files: selectedFiles,
     })
       .then(({ response, newThread }) => {
         if (newThread) {
@@ -73,6 +99,7 @@ export default function ChatBox() {
         setLoading(false);
         setPrompt("");
         setTextboxHeight(24);
+        setSelectedFiles([]);
         setCurrentMessages([
           ...updatedMessages,
           {
@@ -149,6 +176,24 @@ export default function ChatBox() {
               </Popover>
             </div>
             <div className="relative flex-grow">
+              {selectedFiles.length > 0 && (
+                <div className="mb-2 flex flex-wrap gap-2">
+                  {selectedFiles.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-1 rounded-md bg-neutral-700 px-2 py-1 text-sm text-white"
+                    >
+                      <span>{file.name}</span>
+                      <button
+                        onClick={() => removeFile(index)}
+                        className="ml-1 text-neutral-300 hover:text-white"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <textarea
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -172,14 +217,32 @@ export default function ChatBox() {
                 placeholder="Write your message here..."
                 className="w-full resize-none text-left text-base outline-none"
               />
-              <Button
-                disabled={prompt.length < 1 || loading}
-                onClick={() => submitPrompt()}
-                className="absolute right-0 bottom-0 rounded-full"
-                size={"icon"}
-              >
-                <SendHorizonalIcon />
-              </Button>
+              <div className="absolute right-0 bottom-0 flex gap-2">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  accept="image/*,.pdf"
+                  multiple
+                  className="hidden"
+                />
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="rounded-full"
+                  size="icon"
+                  variant="ghost"
+                >
+                  <PaperclipIcon className="h-4 w-4" />
+                </Button>
+                <Button
+                  disabled={(prompt.length < 1 && selectedFiles.length === 0) || loading}
+                  onClick={() => submitPrompt()}
+                  className="rounded-full"
+                  size="icon"
+                >
+                  <SendHorizonalIcon />
+                </Button>
+              </div>
             </div>
           </div>
         </div>

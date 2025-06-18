@@ -5,6 +5,7 @@ export type Message = {
   role: "user" | "system";
   content: string;
   type: "error" | "normal";
+  files?: File[];
 };
 type MainStore = {
   threadsList: (typeof threads.$inferSelect)[];

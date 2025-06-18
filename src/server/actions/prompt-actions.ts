@@ -18,12 +18,14 @@ export async function sendPromptAction({
   existingMessages,
   threadId,
   responseType,
+  files,
 }: {
   prompt: string;
   modelId: string;
   existingMessages: Message[];
   threadId: number | null;
   responseType: "normal" | "creative" | "factual";
+  files?: File[];
 }) {
   const { session } = await validateRequest();
   if (!session) throw new Error("Unauthorized");
@@ -39,7 +41,38 @@ export async function sendPromptAction({
       content: msg.content,
     })); // removing the type field
 
-  formattedMessages.push({ role: "user", content: prompt });
+  // Handle file uploads if present
+  let imageContent = null;
+  let messageContent: string | { type: string; text?: string; image_url?: { url: string } }[] = prompt;
+
+  if (files && files.length > 0) {
+    const file = files[0];
+    if (file && file.type.startsWith('image/')) {
+      const buffer = await file.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      imageContent = `data:${file.type};base64,${base64}`;
+      
+      // Format message with image for OpenAI API
+      messageContent = [
+        {
+          type: "text",
+          text: prompt || "Please analyze this image"
+        },
+        {
+          type: "image_url",
+          image_url: {
+            url: imageContent
+          }
+        }
+      ];
+    }
+  }
+
+  // Add the user's message with image content if present
+  formattedMessages.push({ 
+    role: "user", 
+    content: messageContent as any // Type assertion needed due to OpenAI's type definitions
+  });
 
   // Adjust temperature based on response type
   const temperature = {
@@ -90,17 +123,18 @@ export async function sendPromptAction({
       updatedAt: new Date(),
     })
     .where(eq(threads.id, decidedThreadId));
+
   await db.insert(messages).values({
     senderRole: "user",
     threadId: decidedThreadId,
     textContent: prompt,
-    imageContent: null, // Null for now until we add image support
+    imageContent,
   });
   await db.insert(messages).values({
     senderRole: "system",
     threadId: decidedThreadId,
     textContent: response,
-    imageContent: null, // Null for now until we add image support
+    imageContent: null,
   });
 
   return { response, newThread };

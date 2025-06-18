@@ -70,10 +70,25 @@ export default function ChatMessages({ isLoggedIn }: { isLoggedIn: boolean }) {
                 {l}
               </div>
             ))}
-
-
-
-          
+            {m.files && m.files.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {m.files.map((file, index) => (
+                  <div key={index} className="relative">
+                    {file.type.startsWith('image/') ? (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="max-h-48 rounded-md"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2 rounded-md bg-neutral-200 px-3 py-2">
+                        <span className="text-sm text-neutral-700">{file.name}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           {currentThreadId && (
             <Button
